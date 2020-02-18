@@ -1,5 +1,5 @@
-import java.text.NumberFormat
-import java.util.*
+import org.joda.money.CurrencyUnit
+import org.joda.money.Money
 import kotlin.math.floor
 import kotlin.math.max
 
@@ -16,7 +16,7 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     var volumeCredits = 0
     var result = "Statement for ${invoice.customer}\n"
     val format: (value: Double) -> String = {
-        NumberFormat.getCurrencyInstance(Locale.US).format(it)
+        Money.of(CurrencyUnit.USD,it).toString()
     }
 
     for (perf in invoice.performances) {
