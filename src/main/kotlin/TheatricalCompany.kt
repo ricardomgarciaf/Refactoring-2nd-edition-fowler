@@ -23,7 +23,7 @@ class TheatricalCompany(val plays: Map<String, Play>) {
 
         for (perf in invoice.performances) {
 
-            var thisAmount = amountFor(playFor(perf), perf)
+            var thisAmount = amountFor(perf)
 
             //add volume credits
             volumeCredits += max(perf.audience - 30, 0)
@@ -43,7 +43,7 @@ class TheatricalCompany(val plays: Map<String, Play>) {
 
     //Step 2: Decompose function
     //Step 4: Remove play parameter using playFor function
-    private fun amountFor(play: Play?, aPerformance: Performance): Int {
+    private fun amountFor(aPerformance: Performance): Int {
         var result = 0
         when (playFor(aPerformance)?.type) {
             PlayType.TRAGEDY -> {
