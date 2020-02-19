@@ -14,6 +14,17 @@ enum class PlayType { TRAGEDY, COMEDY }
 class TheatricalCompany(val plays: Map<String, Play>) {
 
     fun statement(invoice: Invoice): String {
+
+        //Step 9: Move declaration of the variable next to the loop
+        //Step 10: Replace temp with query
+        fun totalVolumeCredits(): Int {
+            var volumeCredits = 0
+            for (perf in invoice.performances) {
+                volumeCredits += volumeCreditsFor(perf)
+            }
+            return volumeCredits
+        }
+
         var totalAmount = 0
         var result = "Statement for ${invoice.customer}\n"
 
@@ -24,11 +35,7 @@ class TheatricalCompany(val plays: Map<String, Play>) {
             totalAmount += amountFor(perf)
         }
 
-        //Step 9: Move declaration of the variable next to the loop
-        var volumeCredits = 0
-        for (perf in invoice.performances) {
-            volumeCredits += volumeCreditsFor(perf)
-        }
+        var volumeCredits = totalVolumeCredits()
 
         result += "Amount owed is ${usd(totalAmount.toDouble())}\n"
         result += "You earned ${volumeCredits} credits\n"
