@@ -18,12 +18,17 @@ class TheatricalCompany(val plays: Map<String, Play>) {
         var volumeCredits = 0
         var result = "Statement for ${invoice.customer}\n"
 
+        //Step 8: Split loop
         for (perf in invoice.performances) {
-            volumeCredits += volumeCreditsFor(perf)
             //print line for this order
             result += "${playFor(perf)?.name}: ${usd(amountFor(perf).toDouble())} (${perf.audience} seats)\n"
             totalAmount += amountFor(perf)
         }
+
+        for (perf in invoice.performances) {
+            volumeCredits += volumeCreditsFor(perf)
+        }
+
         result += "Amount owed is ${usd(totalAmount.toDouble())}\n"
         result += "You earned ${volumeCredits} credits\n"
         return result
@@ -70,7 +75,7 @@ class TheatricalCompany(val plays: Map<String, Play>) {
 
     //Step 7: Change function variable to declared function and rename for better understanding
     private fun usd(value: Double): String {
-        return Money.of(CurrencyUnit.USD, value/100).toString()
+        return Money.of(CurrencyUnit.USD, value / 100).toString()
     }
 }
 
