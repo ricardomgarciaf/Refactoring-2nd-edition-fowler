@@ -32,6 +32,10 @@ class TheatricalCompany(val plays: Map<String, Play>) {
         invoice.performances.forEach { perf ->
             //print line for this order
             result += "${playFor(perf)?.name}: ${usd(amountFor(perf).toDouble())} (${perf.audience} seats)\n"
+        }
+
+        //Step 12: Split loop
+        invoice.performances.forEach { perf ->
             totalAmount += amountFor(perf)
         }
 
