@@ -15,7 +15,6 @@ class TheatricalCompany(val plays: Map<String, Play>) {
 
     fun statement(invoice: Invoice): String {
         var totalAmount = 0
-        var volumeCredits = 0
         var result = "Statement for ${invoice.customer}\n"
 
         //Step 8: Split loop
@@ -25,6 +24,8 @@ class TheatricalCompany(val plays: Map<String, Play>) {
             totalAmount += amountFor(perf)
         }
 
+        //Step 9: Move declaration of the variable next to the loop
+        var volumeCredits = 0
         for (perf in invoice.performances) {
             volumeCredits += volumeCreditsFor(perf)
         }
