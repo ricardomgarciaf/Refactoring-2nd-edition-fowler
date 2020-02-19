@@ -14,7 +14,6 @@ enum class PlayType { TRAGEDY, COMEDY }
 class TheatricalCompany(val plays: Map<String, Play>) {
 
 
-
     fun statement(invoice: Invoice): String {
 
         //Step 9: Move declaration of the variable next to the loop
@@ -30,12 +29,12 @@ class TheatricalCompany(val plays: Map<String, Play>) {
         //Step 12: Split loop
         //Step 13: Slide statement
         //Step 14: Extract function
-        fun appleSauce(): Int {
+        fun totalAmount(): Double {
             var totalAmount = 0
             invoice.performances.forEach { perf ->
                 totalAmount += amountFor(perf)
             }
-            return totalAmount
+            return totalAmount.toDouble()
         }
 
         var result = "Statement for ${invoice.customer}\n"
@@ -46,10 +45,9 @@ class TheatricalCompany(val plays: Map<String, Play>) {
             result += "${playFor(perf)?.name}: ${usd(amountFor(perf).toDouble())} (${perf.audience} seats)\n"
         }
 
-        var totalAmount = appleSauce()
-
+        //Step 15: Inline variable
+        result += "Amount owed is ${usd(totalAmount())}\n"
         //Step 11: Inline variable
-        result += "Amount owed is ${usd(totalAmount.toDouble())}\n"
         result += "You earned ${totalVolumeCredits()} credits\n"
         return result
     }
