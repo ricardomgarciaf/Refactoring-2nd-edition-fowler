@@ -21,7 +21,8 @@ class TheatricalCompanyTest {
     //Step 1: Add tests
     @Test
     fun testStatement(){
-        val result = statement(invoice,plays)
+        val company = TheatricalCompany(plays)
+        val result = company.statement(invoice)
         val expected = "Statement for BigCo\n" +
                 "Hamlet: USD 650.00 (55 seats)\n" +
                 "As You Like It: USD 580.00 (35 seats)\n" +
