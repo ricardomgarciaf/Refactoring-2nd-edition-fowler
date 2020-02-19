@@ -19,22 +19,22 @@ class TheatricalCompany(val plays: Map<String, Play>) {
         //Step 9: Move declaration of the variable next to the loop
         //Step 10: Replace temp with query
         fun totalVolumeCredits(): Int {
-            var volumeCredits = 0
+            var result = 0
             invoice.performances.forEach {
-                volumeCredits += volumeCreditsFor(it)
+                result += volumeCreditsFor(it)
             }
-            return volumeCredits
+            return result
         }
 
         //Step 12: Split loop
         //Step 13: Slide statement
         //Step 14: Extract function
         fun totalAmount(): Double {
-            var totalAmount = 0
+            var result = 0
             invoice.performances.forEach { perf ->
-                totalAmount += amountFor(perf)
+                result += amountFor(perf)
             }
-            return totalAmount.toDouble()
+            return result.toDouble()
         }
 
         var result = "Statement for ${invoice.customer}\n"
