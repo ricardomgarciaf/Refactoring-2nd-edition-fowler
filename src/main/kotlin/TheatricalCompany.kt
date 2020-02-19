@@ -11,16 +11,17 @@ data class Play(val name: String, val type: PlayType)
 
 enum class PlayType { TRAGEDY, COMEDY }
 
-data class StatementData(var customer: String="")
+data class StatementData(var customer: String="", var performances: List<Performance> = emptyList())
 
 //Step 16: Split phase
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     val statementData = StatementData()
     statementData.customer=invoice.customer
-    return renderPlainText(statementData, invoice, plays)
+    statementData.performances = invoice.performances
+    return renderPlainText(statementData, plays)
 }
 
-fun renderPlainText(data: StatementData, invoice: Invoice, plays: Map<String, Play>): String {
+fun renderPlainText(data: StatementData, plays: Map<String, Play>): String {
     //Step 3: Replace temp with query (Remove temporary variables (if possible) replacing them by functions if they are read-only variables)
     fun playFor(aPerformance: Performance): Play? {
         return plays[aPerformance.playID]
@@ -70,7 +71,7 @@ fun renderPlainText(data: StatementData, invoice: Invoice, plays: Map<String, Pl
     //Step 10: Replace temp with query
     fun totalVolumeCredits(): Int {
         var result = 0
-        invoice.performances.forEach {
+        data.performances.forEach {
             result += volumeCreditsFor(it)
         }
         return result
@@ -81,7 +82,7 @@ fun renderPlainText(data: StatementData, invoice: Invoice, plays: Map<String, Pl
     //Step 14: Extract function
     fun totalAmount(): Double {
         var result = 0
-        invoice.performances.forEach { perf ->
+        data.performances.forEach { perf ->
             result += amountFor(perf)
         }
         return result.toDouble()
@@ -90,7 +91,7 @@ fun renderPlainText(data: StatementData, invoice: Invoice, plays: Map<String, Pl
     var result = "Statement for ${data.customer}\n"
 
     //Step 8: Split loop
-    invoice.performances.forEach { perf ->
+    data.performances.forEach { perf ->
         //print line for this order
         result += "${playFor(perf)?.name}: ${usd(amountFor(perf).toDouble())} (${perf.audience} seats)\n"
     }
