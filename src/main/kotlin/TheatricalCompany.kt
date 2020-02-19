@@ -11,9 +11,12 @@ data class Play(val name: String, val type: PlayType)
 
 enum class PlayType { TRAGEDY, COMEDY }
 
-
+//Step 16: Split phase
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
+    return renderPlainText(invoice, plays)
+}
 
+fun renderPlainText(invoice: Invoice, plays: Map<String, Play>): String {
     //Step 3: Replace temp with query (Remove temporary variables (if possible) replacing them by functions if they are read-only variables)
     fun playFor(aPerformance: Performance): Play? {
         return plays[aPerformance.playID]
