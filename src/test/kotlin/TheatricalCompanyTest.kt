@@ -18,6 +18,7 @@ class TheatricalCompanyTest {
         )
     )
 
+    //Step 1: Add tests
     @Test
     fun testStatement(){
         val result = statement(invoice,plays)
