@@ -22,13 +22,7 @@ class TheatricalCompany(val plays: Map<String, Play>) {
         }
 
         for (perf in invoice.performances) {
-            //add volume credits
-            volumeCredits += max(perf.audience - 30, 0)
-            //add extra credit for every ten comedy attendees
-            if (playFor(perf)?.type == PlayType.COMEDY) {
-                volumeCredits += floor(perf.audience.toDouble() / 5).toInt()
-            }
-
+            volumeCredits += volumeCreditsFor(perf)
             //print line for this order
             result += "${playFor(perf)?.name}: ${format((amountFor(perf).toDouble() / 100))} (${perf.audience} seats)\n"
             totalAmount += amountFor(perf)
@@ -65,6 +59,16 @@ class TheatricalCompany(val plays: Map<String, Play>) {
     //Step 3: Replace temp with query (Remove temporary variables (if possible) replacing them by functions if they are read-only variables)
     private fun playFor(aPerformance: Performance): Play? {
         return plays[aPerformance.playID]
+    }
+
+    //Step 6: Move volumeCredits calculation to a function
+    private fun volumeCreditsFor(perf: Performance): Int {
+        var result = 0
+        result += max(perf.audience - 30, 0)
+        if (playFor(perf)?.type == PlayType.COMEDY) {
+            result += floor(perf.audience.toDouble() / 5).toInt()
+        }
+        return result
     }
 }
 
