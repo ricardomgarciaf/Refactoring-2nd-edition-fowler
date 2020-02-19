@@ -19,8 +19,8 @@ class TheatricalCompany(val plays: Map<String, Play>) {
         //Step 10: Replace temp with query
         fun totalVolumeCredits(): Int {
             var volumeCredits = 0
-            for (perf in invoice.performances) {
-                volumeCredits += volumeCreditsFor(perf)
+            invoice.performances.forEach {
+                volumeCredits += volumeCreditsFor(it)
             }
             return volumeCredits
         }
@@ -29,16 +29,15 @@ class TheatricalCompany(val plays: Map<String, Play>) {
         var result = "Statement for ${invoice.customer}\n"
 
         //Step 8: Split loop
-        for (perf in invoice.performances) {
+        invoice.performances.forEach { perf ->
             //print line for this order
             result += "${playFor(perf)?.name}: ${usd(amountFor(perf).toDouble())} (${perf.audience} seats)\n"
             totalAmount += amountFor(perf)
         }
 
-        var volumeCredits = totalVolumeCredits()
-
+        //Step 11: Inline variable
         result += "Amount owed is ${usd(totalAmount.toDouble())}\n"
-        result += "You earned ${volumeCredits} credits\n"
+        result += "You earned ${totalVolumeCredits()} credits\n"
         return result
     }
 
