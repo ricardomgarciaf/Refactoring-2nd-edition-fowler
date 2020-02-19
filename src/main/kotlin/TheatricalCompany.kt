@@ -17,17 +17,14 @@ class TheatricalCompany(val plays: Map<String, Play>) {
         var totalAmount = 0
         var volumeCredits = 0
         var result = "Statement for ${invoice.customer}\n"
-        val format: (value: Double) -> String = {
-            Money.of(CurrencyUnit.USD, it).toString()
-        }
 
         for (perf in invoice.performances) {
             volumeCredits += volumeCreditsFor(perf)
             //print line for this order
-            result += "${playFor(perf)?.name}: ${format((amountFor(perf).toDouble() / 100))} (${perf.audience} seats)\n"
+            result += "${playFor(perf)?.name}: ${usd(amountFor(perf).toDouble())} (${perf.audience} seats)\n"
             totalAmount += amountFor(perf)
         }
-        result += "Amount owed is ${format(totalAmount.toDouble() / 100)}\n"
+        result += "Amount owed is ${usd(totalAmount.toDouble())}\n"
         result += "You earned ${volumeCredits} credits\n"
         return result
     }
@@ -62,13 +59,18 @@ class TheatricalCompany(val plays: Map<String, Play>) {
     }
 
     //Step 6: Move volumeCredits calculation to a function
-    private fun volumeCreditsFor(perf: Performance): Int {
+    private fun volumeCreditsFor(aPerformance: Performance): Int {
         var result = 0
-        result += max(perf.audience - 30, 0)
-        if (playFor(perf)?.type == PlayType.COMEDY) {
-            result += floor(perf.audience.toDouble() / 5).toInt()
+        result += max(aPerformance.audience - 30, 0)
+        if (playFor(aPerformance)?.type == PlayType.COMEDY) {
+            result += floor(aPerformance.audience.toDouble() / 5).toInt()
         }
         return result
+    }
+
+    //Step 7: Change function variable to declared function and rename for better understanding
+    private fun usd(value: Double): String {
+        return Money.of(CurrencyUnit.USD, value/100).toString()
     }
 }
 
