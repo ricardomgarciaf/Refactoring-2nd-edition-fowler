@@ -11,51 +11,18 @@ data class Play(val name: String, val type: PlayType)
 
 enum class PlayType { TRAGEDY, COMEDY }
 
-class TheatricalCompany(val plays: Map<String, Play>) {
 
+fun statement(invoice: Invoice, plays: Map<String, Play>): String {
 
-    fun statement(invoice: Invoice): String {
-
-        //Step 9: Move declaration of the variable next to the loop
-        //Step 10: Replace temp with query
-        fun totalVolumeCredits(): Int {
-            var result = 0
-            invoice.performances.forEach {
-                result += volumeCreditsFor(it)
-            }
-            return result
-        }
-
-        //Step 12: Split loop
-        //Step 13: Slide statement
-        //Step 14: Extract function
-        fun totalAmount(): Double {
-            var result = 0
-            invoice.performances.forEach { perf ->
-                result += amountFor(perf)
-            }
-            return result.toDouble()
-        }
-
-        var result = "Statement for ${invoice.customer}\n"
-
-        //Step 8: Split loop
-        invoice.performances.forEach { perf ->
-            //print line for this order
-            result += "${playFor(perf)?.name}: ${usd(amountFor(perf).toDouble())} (${perf.audience} seats)\n"
-        }
-
-        //Step 15: Inline variable
-        result += "Amount owed is ${usd(totalAmount())}\n"
-        //Step 11: Inline variable
-        result += "You earned ${totalVolumeCredits()} credits\n"
-        return result
+    //Step 3: Replace temp with query (Remove temporary variables (if possible) replacing them by functions if they are read-only variables)
+    fun playFor(aPerformance: Performance): Play? {
+        return plays[aPerformance.playID]
     }
 
     //Step 2: Decompose function
     //Step 4: Remove play parameter using playFor function
     //Step 5: thisAmount is never updated again which means that inline variable can be used
-    private fun amountFor(aPerformance: Performance): Int {
+    fun amountFor(aPerformance: Performance): Int {
         var result = 0
         when (playFor(aPerformance)?.type) {
             PlayType.TRAGEDY -> {
@@ -76,13 +43,9 @@ class TheatricalCompany(val plays: Map<String, Play>) {
         return result
     }
 
-    //Step 3: Replace temp with query (Remove temporary variables (if possible) replacing them by functions if they are read-only variables)
-    private fun playFor(aPerformance: Performance): Play? {
-        return plays[aPerformance.playID]
-    }
 
     //Step 6: Move volumeCredits calculation to a function
-    private fun volumeCreditsFor(aPerformance: Performance): Int {
+    fun volumeCreditsFor(aPerformance: Performance): Int {
         var result = 0
         result += max(aPerformance.audience - 30, 0)
         if (playFor(aPerformance)?.type == PlayType.COMEDY) {
@@ -92,9 +55,44 @@ class TheatricalCompany(val plays: Map<String, Play>) {
     }
 
     //Step 7: Change function variable to declared function and rename for better understanding
-    private fun usd(value: Double): String {
+    fun usd(value: Double): String {
         return Money.of(CurrencyUnit.USD, value / 100).toString()
     }
+
+    //Step 9: Move declaration of the variable next to the loop
+    //Step 10: Replace temp with query
+    fun totalVolumeCredits(): Int {
+        var result = 0
+        invoice.performances.forEach {
+            result += volumeCreditsFor(it)
+        }
+        return result
+    }
+
+    //Step 12: Split loop
+    //Step 13: Slide statement
+    //Step 14: Extract function
+    fun totalAmount(): Double {
+        var result = 0
+        invoice.performances.forEach { perf ->
+            result += amountFor(perf)
+        }
+        return result.toDouble()
+    }
+
+    var result = "Statement for ${invoice.customer}\n"
+
+    //Step 8: Split loop
+    invoice.performances.forEach { perf ->
+        //print line for this order
+        result += "${playFor(perf)?.name}: ${usd(amountFor(perf).toDouble())} (${perf.audience} seats)\n"
+    }
+
+    //Step 15: Inline variable
+    result += "Amount owed is ${usd(totalAmount())}\n"
+    //Step 11: Inline variable
+    result += "You earned ${totalVolumeCredits()} credits\n"
+    return result
 }
 
 
