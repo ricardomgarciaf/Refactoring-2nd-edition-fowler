@@ -24,8 +24,6 @@ class TheatricalCompany(val plays: Map<String, Play>) {
             }
             return volumeCredits
         }
-
-        var totalAmount = 0
         var result = "Statement for ${invoice.customer}\n"
 
         //Step 8: Split loop
@@ -35,6 +33,8 @@ class TheatricalCompany(val plays: Map<String, Play>) {
         }
 
         //Step 12: Split loop
+        //Step 13: Slide statement
+        var totalAmount = 0
         invoice.performances.forEach { perf ->
             totalAmount += amountFor(perf)
         }
