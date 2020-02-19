@@ -42,9 +42,10 @@ class TheatricalCompany(val plays: Map<String, Play>) {
     }
 
     //Step 2: Decompose function
+    //Step 4: Remove play parameter using playFor function
     private fun amountFor(play: Play?, aPerformance: Performance): Int {
         var result = 0
-        when (play?.type) {
+        when (playFor(aPerformance)?.type) {
             PlayType.TRAGEDY -> {
                 result = 40000
                 if (aPerformance.audience > 30) {
@@ -58,7 +59,7 @@ class TheatricalCompany(val plays: Map<String, Play>) {
                 }
                 result += 300 * aPerformance.audience
             }
-            else -> throw Error("unknown type : ${play?.type}")
+            else -> throw Error("unknown type : ${playFor(aPerformance)?.type}")
         }
         return result
     }
