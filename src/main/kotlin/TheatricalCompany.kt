@@ -11,12 +11,16 @@ data class Play(val name: String, val type: PlayType)
 
 enum class PlayType { TRAGEDY, COMEDY }
 
+data class StatementData(var customer: String="")
+
 //Step 16: Split phase
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
-    return renderPlainText(invoice, plays)
+    val statementData = StatementData()
+    statementData.customer=invoice.customer
+    return renderPlainText(statementData, invoice, plays)
 }
 
-fun renderPlainText(invoice: Invoice, plays: Map<String, Play>): String {
+fun renderPlainText(data: StatementData, invoice: Invoice, plays: Map<String, Play>): String {
     //Step 3: Replace temp with query (Remove temporary variables (if possible) replacing them by functions if they are read-only variables)
     fun playFor(aPerformance: Performance): Play? {
         return plays[aPerformance.playID]
@@ -83,7 +87,7 @@ fun renderPlainText(invoice: Invoice, plays: Map<String, Play>): String {
         return result.toDouble()
     }
 
-    var result = "Statement for ${invoice.customer}\n"
+    var result = "Statement for ${data.customer}\n"
 
     //Step 8: Split loop
     invoice.performances.forEach { perf ->
