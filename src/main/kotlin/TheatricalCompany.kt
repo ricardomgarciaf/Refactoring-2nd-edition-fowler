@@ -8,6 +8,7 @@ data class Performance(val playID: String, val audience: Int)
 //Step 17: Create structure
 data class EnrichedPerformance(val play: Play, val audience: Int) {
     var amount: Int = 0
+    var volumeCredits: Int = 0
 }
 
 data class Invoice(val customer: String, val performances: List<Performance>)
@@ -47,23 +48,27 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     //Step 3: Replace temp with query (Remove temporary variables (if possible) replacing them by functions if they are read-only variables)
     fun playFor(aPerformance: Performance) = plays[aPerformance.playID]
 
+    //Step 6: Move volumeCredits calculation to a function
+    fun volumeCreditsFor(aPerformance: EnrichedPerformance): Int {
+        var result = 0
+        result += max(aPerformance.audience - 30, 0)
+        if (aPerformance.play.type == PlayType.COMEDY) {
+            result += floor(aPerformance.audience.toDouble() / 5).toInt()
+        }
+        return result
+    }
+
     fun enrichPerformance(aPerformance: Performance): EnrichedPerformance {
         return EnrichedPerformance(
             playFor(aPerformance) ?: error("Play not found"),
             aPerformance.audience
-        ).apply { amount = amountFor(this) }
+        ).apply {
+            amount = amountFor(this)
+            volumeCredits = volumeCreditsFor(this)
+        }
     }
 
     fun renderPlainText(data: StatementData, plays: Map<String, Play>): String {
-        //Step 6: Move volumeCredits calculation to a function
-        fun volumeCreditsFor(aPerformance: EnrichedPerformance): Int {
-            var result = 0
-            result += max(aPerformance.audience - 30, 0)
-            if (aPerformance.play.type == PlayType.COMEDY) {
-                result += floor(aPerformance.audience.toDouble() / 5).toInt()
-            }
-            return result
-        }
 
         //Step 7: Change function variable to declared function and rename for better understanding
         fun usd(value: Double): String {
@@ -75,7 +80,7 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         fun totalVolumeCredits(): Int {
             var result = 0
             data.performances.forEach {
-                result += volumeCreditsFor(it)
+                result += it.volumeCredits
             }
             return result
         }
