@@ -97,7 +97,7 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         }
     }
 
-    fun renderPlainText(data: StatementData, plays: Map<String, Play>): String {
+    fun renderPlainText(data: StatementData): String {
 
         //Step 7: Change function variable to declared function and rename for better understanding
         fun usd(value: Double): String {
@@ -124,7 +124,7 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     statementData.performances = invoice.performances.map { enrichPerformance(it) }
     statementData.totalAmount = totalAmount(statementData)
     statementData.totalVolumeCredits = totalVolumeCredits(statementData)
-    return renderPlainText(statementData, plays)
+    return renderPlainText(statementData)
 }
 
 
