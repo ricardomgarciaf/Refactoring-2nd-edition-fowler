@@ -39,6 +39,17 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         return result
     }
 
+    //Step 9: Move declaration of the variable next to the loop
+    //Step 10: Replace temp with query
+    //Step 19: Extract totalVolumeCredits
+    fun totalVolumeCredits(data: StatementData): Int {
+        var result = 0
+        data.performances.forEach {
+            result += it.volumeCredits
+        }
+        return result
+    }
+
     //Step 2: Decompose function
     //Step 4: Remove play parameter using playFor function
     //Step 5: thisAmount is never updated again which means that inline variable can be used
@@ -61,6 +72,7 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         }
         return result
     }
+
 
     //Step 3: Replace temp with query (Remove temporary variables (if possible) replacing them by functions if they are read-only variables)
     fun playFor(aPerformance: Performance) = plays[aPerformance.playID]
@@ -92,16 +104,6 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
             return Money.of(CurrencyUnit.USD, value / 100).toString()
         }
 
-        //Step 9: Move declaration of the variable next to the loop
-        //Step 10: Replace temp with query
-        fun totalVolumeCredits(): Int {
-            var result = 0
-            data.performances.forEach {
-                result += it.volumeCredits
-            }
-            return result
-        }
-
         var result = "Statement for ${data.customer}\n"
 
         //Step 8: Split loop
@@ -113,7 +115,7 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         //Step 15: Inline variable
         result += "Amount owed is ${usd(data.totalAmount.toDouble())}\n"
         //Step 11: Inline variable
-        result += "You earned ${totalVolumeCredits()} credits\n"
+        result += "You earned ${data.totalVolumeCredits} credits\n"
         return result
     }
 
@@ -121,6 +123,7 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     statementData.customer = invoice.customer
     statementData.performances = invoice.performances.map { enrichPerformance(it) }
     statementData.totalAmount = totalAmount(statementData)
+    statementData.totalVolumeCredits = totalVolumeCredits(statementData)
     return renderPlainText(statementData, plays)
 }
 
