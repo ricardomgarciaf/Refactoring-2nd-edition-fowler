@@ -17,10 +17,27 @@ data class Play(val name: String, val type: PlayType)
 
 enum class PlayType { TRAGEDY, COMEDY }
 
-data class StatementData(var customer: String = "", var performances: List<EnrichedPerformance> = emptyList())
+data class StatementData(
+    var customer: String = "",
+    var performances: List<EnrichedPerformance> = emptyList(),
+    var totalAmount: Int = 0,
+    var totalVolumeCredits: Int = 0
+)
 
 //Step 16: Split phase
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
+
+    //Step 12: Split loop
+    //Step 13: Slide statement
+    //Step 14: Extract function
+    //Step 18: Extract totalAmount
+    fun totalAmount(data: StatementData): Int {
+        var result = 0
+        data.performances.forEach { perf ->
+            result += perf.amount
+        }
+        return result
+    }
 
     //Step 2: Decompose function
     //Step 4: Remove play parameter using playFor function
@@ -85,17 +102,6 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
             return result
         }
 
-        //Step 12: Split loop
-        //Step 13: Slide statement
-        //Step 14: Extract function
-        fun totalAmount(): Double {
-            var result = 0
-            data.performances.forEach { perf ->
-                result += perf.amount
-            }
-            return result.toDouble()
-        }
-
         var result = "Statement for ${data.customer}\n"
 
         //Step 8: Split loop
@@ -105,7 +111,7 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         }
 
         //Step 15: Inline variable
-        result += "Amount owed is ${usd(totalAmount())}\n"
+        result += "Amount owed is ${usd(data.totalAmount.toDouble())}\n"
         //Step 11: Inline variable
         result += "You earned ${totalVolumeCredits()} credits\n"
         return result
@@ -114,6 +120,7 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
     val statementData = StatementData()
     statementData.customer = invoice.customer
     statementData.performances = invoice.performances.map { enrichPerformance(it) }
+    statementData.totalAmount = totalAmount(statementData)
     return renderPlainText(statementData, plays)
 }
 
