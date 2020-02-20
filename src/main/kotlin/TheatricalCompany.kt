@@ -26,7 +26,10 @@ data class StatementData(
 
 //Step 16: Split phase
 fun statement(invoice: Invoice, plays: Map<String, Play>): String {
+    return renderPlainText(createStatementData(invoice, plays))
+}
 
+fun createStatementData(invoice: Invoice, plays: Map<String, Play>): StatementData {
     //Step 12: Split loop
     //Step 13: Slide statement
     //Step 14: Extract function
@@ -97,34 +100,33 @@ fun statement(invoice: Invoice, plays: Map<String, Play>): String {
         }
     }
 
-    fun renderPlainText(data: StatementData): String {
-
-        //Step 7: Change function variable to declared function and rename for better understanding
-        fun usd(value: Double): String {
-            return Money.of(CurrencyUnit.USD, value / 100).toString()
-        }
-
-        var result = "Statement for ${data.customer}\n"
-
-        //Step 8: Split loop
-        data.performances.forEach { perf ->
-            //print line for this order
-            result += "${perf.play.name}: ${usd(perf.amount.toDouble())} (${perf.audience} seats)\n"
-        }
-
-        //Step 15: Inline variable
-        result += "Amount owed is ${usd(data.totalAmount.toDouble())}\n"
-        //Step 11: Inline variable
-        result += "You earned ${data.totalVolumeCredits} credits\n"
-        return result
-    }
-
     val statementData = StatementData()
     statementData.customer = invoice.customer
     statementData.performances = invoice.performances.map { enrichPerformance(it) }
     statementData.totalAmount = totalAmount(statementData)
     statementData.totalVolumeCredits = totalVolumeCredits(statementData)
-    return renderPlainText(statementData)
+    return statementData
+}
+
+//Step 7: Change function variable to declared function and rename for better understanding
+fun usd(value: Double): String {
+    return Money.of(CurrencyUnit.USD, value / 100).toString()
+}
+
+fun renderPlainText(data: StatementData): String {
+    var result = "Statement for ${data.customer}\n"
+
+    //Step 8: Split loop
+    data.performances.forEach { perf ->
+        //print line for this order
+        result += "${perf.play.name}: ${usd(perf.amount.toDouble())} (${perf.audience} seats)\n"
+    }
+
+    //Step 15: Inline variable
+    result += "Amount owed is ${usd(data.totalAmount.toDouble())}\n"
+    //Step 11: Inline variable
+    result += "You earned ${data.totalVolumeCredits} credits\n"
+    return result
 }
 
 
